@@ -1,0 +1,22 @@
+body { 
+    background-color: black;
+    color: white;
+    font-family: "Calibri";
+}
+
+h1 {
+    font-weight: 100;
+}
+
+#editor {
+    width: 700px;
+    height: 700px;
+}
+
+#rafael {
+    position: absolute;
+    left: 720px;
+    width: 700px;
+    height: 700px;
+}
+
