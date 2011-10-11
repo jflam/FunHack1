@@ -69,6 +69,8 @@ execute_selection = function(env, args, request) {
             } else {
                 editor.insert("\r\n//> " + result.toString() + "\r\n");
             }
+        } else {
+            editor.insert("\r\n");
         }
     }
 }
