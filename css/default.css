@@ -13,9 +13,31 @@ h1 {
     height: 700px;
 }
 
-#rafael {
+#output {
     position: absolute;
     left: 720px;
+    overflow-y: scroll;
+    width: 700px;
+    height: 700px;
+}
+
+#rafael {
+    position: absolute;
+    top: 0px;
+    width: 700px;
+    height: 700px;
+}
+
+#console {
+    position: absolute;
+    top: 700px;
+    width: 700px;
+    height: 700px;
+}
+
+#html1 {
+    position: absolute;
+    top: 1400px;
     width: 700px;
     height: 700px;
 }
