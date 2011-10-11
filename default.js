@@ -38,7 +38,7 @@ dir = function(obj) {
     }
 }
 
-execute_selection = function(editor, env, args, request) {
+execute_selection = function(env, args, request) {
     var doc = editor.getSession().doc;
     var selection = editor.getSelectionRange();
     var code = null;
@@ -90,7 +90,7 @@ init_editor = function() {
             sender: 'editor'
         },
         exec: function(env, args, request) {
-            execute_selection(editor, env, args, request);
+            execute_selection(env, args, request);
         }
     });
     canon.addCommand({
