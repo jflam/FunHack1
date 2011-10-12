@@ -2,6 +2,7 @@ var console = null;
 var rafael = null;
 var editor = null;
 var html = null;
+var language = "javascript";
 
 instance_eval = (function () {
     var $ = {};
@@ -35,6 +36,18 @@ print = function(str) {
 dir = function(obj) {
     for (key in obj) {
         print(key);
+    }
+}
+
+switch_language = function(new_language) {
+    language = new_language;
+}
+
+// Execute code based on what the currently selected language is
+execute_code = function(code) {
+    if (language == "coffeescript") {
+    }
+    else {
     }
 }
 
@@ -126,6 +139,28 @@ init_editor = function() {
         },
         exec: function(env, args, request) {
             show_output(2);
+        }
+    });
+    canon.addCommand({
+        name: 'switch_coffeescript',
+        bindKey: { 
+            win: 'Ctrl-K',
+            mac: 'Ctrl-K',
+            sender: 'editor'
+        },
+        exec: function(env, args, request) {
+            switch_language("coffeescript");
+        }
+    });
+    canon.addCommand({
+        name: 'switch_javascript',
+        bindKey: { 
+            win: 'Ctrl-J',
+            mac: 'Ctrl-J',
+            sender: 'editor'
+        },
+        exec: function(env, args, request) {
+            switch_language("javascript");
         }
     });
 }
