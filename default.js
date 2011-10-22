@@ -4,6 +4,32 @@ var editor = null;
 var html = null;
 var language = "javascript";
 
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Github integration
+//  - support for Github API
+
+// TODO: how do we keep this a secret?
+var git_user_name = "jflam";
+var git_password = "fMKKU1NfZY4wwoG";
+var git_api_token = "f478586eb00c38be01522daed9fc86fa";
+
+git_get_starred_gists = function() {
+    var auth_hash = Base64.encode(git_user_name + ':' + git_password);
+    var auth_header = "Basic " + auth_hash
+    var git_get_starred_gists_api = "https://api.github.com/gists/starred";
+              
+    $.ajax({url: git_get_starred_gists_api,
+            method: 'GET',
+            beforeSend: function(req) {
+                req.setRequestHeader('Authorization', auth_header);
+            },
+            success: function(data, textStatus, xhr) {
+                alert(data);
+            }});
+}
+
+// TODO: we need a better instance_eval style function in JS -- need to get a
+// consult on how to do this correctly with JS guys.
 instance_eval = (function () {
     var $ = {};
     return function (str) {
@@ -15,6 +41,9 @@ instance_eval = (function () {
         }
     }
 })();
+
+///////////////////////////////////////////////////////////////////////////////////////////////////
+// Ace editor support
 
 // This toggles between the three different output windows
 show_output = function(id) {
@@ -186,4 +215,5 @@ window.onload = function() {
     init_rafael();
     init_console();
     init_html();
+    git_get_starred_gists();
 }
