@@ -13,19 +13,34 @@ var git_user_name = "jflam";
 var git_password = "fMKKU1NfZY4wwoG";
 var git_api_token = "f478586eb00c38be01522daed9fc86fa";
 
-git_get_starred_gists = function() {
+git_make_authenticated_call = function(call, success_callback) {
     var auth_hash = Base64.encode(git_user_name + ':' + git_password);
     var auth_header = "Basic " + auth_hash
-    var git_get_starred_gists_api = "https://api.github.com/gists/starred";
-              
-    $.ajax({url: git_get_starred_gists_api,
+
+    $.ajax({url: call,
             method: 'GET',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', auth_header);
             },
-            success: function(data, textStatus, xhr) {
-                alert(data);
-            }});
+            success: success_callback
+            });
+}
+
+git_get_starred_gists = function() {
+    var git_get_starred_gists_api = "https://api.github.com/gists/starred";
+    git_make_authenticated_call(git_get_starred_gists_api, 
+        function(data, text_status, xhr) {
+            alert(data[0])
+        });
+}
+
+git_get_gist = function(id, filename) {
+    var git_get_gist_api = "https://api.github.com/gists/" + id;
+    git_make_authenticated_call(git_get_gist_api, 
+        function(data, text_status, xhr) {
+            var code = data.files[filename].content;
+            editor.getSession().setValue(code);
+        });
 }
 
 // TODO: we need a better instance_eval style function in JS -- need to get a
@@ -215,5 +230,5 @@ window.onload = function() {
     init_rafael();
     init_console();
     init_html();
-    git_get_starred_gists();
+    git_get_gist("265480", "Raphael-vertical-text-alignment-test-wheel.js");
 }
