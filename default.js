@@ -43,6 +43,14 @@ git_get_gist = function(id, filename) {
         });
 }
 
+git_fork_gist = function(id) {
+    var git_fork_gist_api = "https://api.github.com/" + id + "/fork";
+    git_make_authenticated_call(git_fork_gist_api,
+        function(data, text_status, xhr) {
+            // TODO: assert that we got a 201 response code
+        });
+}
+
 // TODO: we need a better instance_eval style function in JS -- need to get a
 // consult on how to do this correctly with JS guys.
 instance_eval = (function () {
