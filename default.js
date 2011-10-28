@@ -51,6 +51,28 @@ git_fork_gist = function(id) {
         });
 }
 
+git_save_gist = function(id, filename) {
+    var git_save_gist_api = "https://api.github.com/gists/" + id;
+
+    // Assemble the JSON request
+    var content = editor.getSession().getValue();
+    var request = '{ "files": { "' + filename + '" { "content": ' + content + '} } }';
+
+    // TODO: refactor this code, but copy and pasting right now just to make
+    // progress more quickly - need to merge with git_make_authenticated_call()
+    var auth_hash = Base64.encode(git_user_name + ':' + git_password);
+    var auth_header = "Basic " + auth_hash
+
+    $.ajax({url: call,
+            method: 'PATCH',
+            data: request,
+            beforeSend: function(req) {
+                req.setRequestHeader('Authorization', auth_header);
+            },
+            success: success_callback
+            });
+}
+
 // TODO: we need a better instance_eval style function in JS -- need to get a
 // consult on how to do this correctly with JS guys.
 instance_eval = (function () {
@@ -73,6 +95,20 @@ show_output = function(id) {
     var top = id * 700;
     var output = document.getElementById("output");
     output.scrollTop = top;
+}
+
+var forked = false;
+var gist_id = "265480";
+var gist_filename = "Raphael-vertical-text-alignment-test-wheel.js";
+
+// Save the gist -- right now this hardcodes to a fork
+save_gist = function() {
+    if (!forked) {
+        git_fork_gist(gist_id);
+        forked = true;
+    }
+
+    git_save_gist(gist_id, gist_filename);
 }
 
 // Helper functions for the interactive console
@@ -194,6 +230,17 @@ init_editor = function() {
         }
     });
     canon.addCommand({
+        name: 'save',
+        bindKey: { 
+            win: 'Ctrl-S',
+            mac: 'Ctrl-S',
+            sender: 'editor'
+        },
+        exec: function(env, args, request) {
+            save_gist();
+        }
+    });
+    canon.addCommand({
         name: 'switch_coffeescript',
         bindKey: { 
             win: 'Ctrl-K',
@@ -238,5 +285,5 @@ window.onload = function() {
     init_rafael();
     init_console();
     init_html();
-    git_get_gist("265480", "Raphael-vertical-text-alignment-test-wheel.js");
+    git_get_gist(gist_id, gist_filename);
 }
