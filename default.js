@@ -18,7 +18,7 @@ git_make_authenticated_call = function(call, success_callback) {
     var auth_header = "Basic " + auth_hash
 
     $.ajax({url: call,
-            method: 'GET',
+            type: 'GET',
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', auth_header);
             },
@@ -44,14 +44,41 @@ git_get_gist = function(id, filename) {
 }
 
 git_fork_gist = function(id) {
-    var git_fork_gist_api = "https://api.github.com/" + id + "/fork";
-    git_make_authenticated_call(git_fork_gist_api,
-        function(data, text_status, xhr) {
-            // TODO: assert that we got a 201 response code
+    var git_fork_gist_api = "https://api.github.com/gists/" + id + "/fork";
+
+    var auth_hash = Base64.encode(git_user_name + ':' + git_password);
+    var auth_header = "Basic " + auth_hash;
+
+    $.ajax({url: git_fork_gist_api,
+            type: 'POST',
+            beforeSend: function(req) {
+                req.setRequestHeader('Authorization', auth_header);
+            },
+            success: function(data, text_status, xhr) {
+                alert(text_status);
+            }
         });
 }
 
-git_save_gist = function(id, filename) {
+git_new_gist = function() {
+    var git_fork_gist_api = "https://api.github.com/gists";
+
+    var auth_hash = Base64.encode(git_user_name + ':' + git_password);
+    var auth_header = "Basic " + auth_hash;
+
+    $.ajax({url: git_fork_gist_api,
+            type: 'POST',
+            data: '{"public": true, "files": {"default.js": {"content": "//hello world"}}}',
+            beforeSend: function(req) {
+                req.setRequestHeader('Authorization', auth_header);
+            },
+            success: function(data, text_status, xhr) {
+                alert(text_status);
+            }
+        });
+}
+
+git_save_gist = function(id, filename, success_callback) {
     var git_save_gist_api = "https://api.github.com/gists/" + id;
 
     // Assemble the JSON request
@@ -61,10 +88,10 @@ git_save_gist = function(id, filename) {
     // TODO: refactor this code, but copy and pasting right now just to make
     // progress more quickly - need to merge with git_make_authenticated_call()
     var auth_hash = Base64.encode(git_user_name + ':' + git_password);
-    var auth_header = "Basic " + auth_hash
+    var auth_header = "Basic " + auth_hash;
 
-    $.ajax({url: call,
-            method: 'PATCH',
+    $.ajax({url: git_save_gist_api,
+            type: 'PATCH',
             data: request,
             beforeSend: function(req) {
                 req.setRequestHeader('Authorization', auth_header);
@@ -103,12 +130,14 @@ var gist_filename = "Raphael-vertical-text-alignment-test-wheel.js";
 
 // Save the gist -- right now this hardcodes to a fork
 save_gist = function() {
+    git_new_gist();
+    /*
     if (!forked) {
         git_fork_gist(gist_id);
         forked = true;
     }
 
-    git_save_gist(gist_id, gist_filename);
+    git_save_gist(gist_id, gist_filename);*/
 }
 
 // Helper functions for the interactive console
@@ -232,8 +261,8 @@ init_editor = function() {
     canon.addCommand({
         name: 'save',
         bindKey: { 
-            win: 'Ctrl-S',
-            mac: 'Ctrl-S',
+            win: 'Ctrl-E',
+            mac: 'Ctrl-E',
             sender: 'editor'
         },
         exec: function(env, args, request) {
