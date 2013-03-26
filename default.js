@@ -9,9 +9,9 @@ var language = "javascript";
 //  - support for Github API
 
 // TODO: how do we keep this a secret?
-var git_user_name = "jflam";
-var git_password = "fMKKU1NfZY4wwoG";
-var git_api_token = "f478586eb00c38be01522daed9fc86fa";
+var git_user_name = ""; 
+var git_password = "";
+var git_api_token = "";
 
 git_make_authenticated_call = function(call, success_callback) {
     var auth_hash = Base64.encode(git_user_name + ':' + git_password);
